@@ -47,3 +47,6 @@ codeql-analysis:
 	with:
           matrix:
             language: go
+
+- name: Install govulncheck
+              run: go get -u golang.org/x/vuln/cmd/govulncheck
