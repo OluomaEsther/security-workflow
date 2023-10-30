@@ -50,3 +50,8 @@ codeql-analysis:
 
 - name: Install govulncheck
               run: go get -u golang.org/x/vuln/cmd/govulncheck
+
+- name: Run vulnerability scanning
+        run: |
+          go get -u golang.org/x/vuln/cmd/govulncheck
+          govulncheck
