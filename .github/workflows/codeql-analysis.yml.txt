@@ -1,0 +1,49 @@
+name: "CodeQL Analysis"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  CodeQL-Build:
+    runs-on: ubuntu-latest
+
+codeql-analysis:
+    uses: security-org/codeql-analysis-workflow@main
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ~1.20.10
+
+      # Initializes the CodeQL tools for scanning.
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: go
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
+        run: go build
+        working-directory: ./app
+        env:
+          CGO_ENABLED: 0 # Example environment variable for Go build
+
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+	with:
+          matrix:
+            language: go
